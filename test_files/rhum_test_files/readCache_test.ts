@@ -4,6 +4,7 @@
  * Should return a graphql response object if all required values are found in the cache.
  * Should return undefined if any field is missing value  in the cache.
  * Should accept multiple queries in one query operation.
+ * Should ignore the elements with a 'DELETE' value and not throw a cache miss if asked for in the query string
  * 2. This file will test populateAllTypes functionalities:
  * Should return undefined if any field is missing from the cache.
  * Should return an array of field objects if all the elements are found in the cache.
@@ -36,6 +37,13 @@ Rhum.testPlan('readCache.js', () => {
         Rhum.asserts.assertEquals(result, test.multipleQueriesResObj);
       }
     );
+    Rhum.testCase(
+      "should ignore the elements with a 'DELETE' value and not throw a cache miss if asked for in the query string",
+      () => {
+        const result = readCache(test.queryStrDelete, test.cache);
+        Rhum.asserts.assertEquals(result, test.multipleQueriesResObj);
+      }
+    );
   });
 
   Rhum.testSuite('populateAllTypes()', () => {
@@ -47,7 +55,7 @@ Rhum.testPlan('readCache.js', () => {
           test.cache,
           test.fieldsUndefined
         );
-        Rhum.asserts.assertEquals(result, undefined);
+        Rhum.asserts.assertEquals(result);
       }
     );
     Rhum.testCase(
